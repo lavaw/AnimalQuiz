@@ -2,7 +2,7 @@
 //  ViewController.swift
 //  AnimalQuiz
 //
-//  Created by Rudolf Amiryan on 04.11.23.
+//  Created by Rudolf Amiryan on 04.11.2023.
 //
 
 import UIKit
@@ -13,8 +13,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
     }
-
-    @IBAction func unwind(for segue: UIStoryboardSegue) {}
-
+    
+    @IBAction func unwind(for seque: UIStoryboardSegue) {}
 }
 

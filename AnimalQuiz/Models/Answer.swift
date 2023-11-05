@@ -2,16 +2,15 @@
 //  Answer.swift
 //  AnimalQuiz
 //
-//  Created by Rudolf Amiryan on 04.11.23.
+//  Created by Rudolf Amiryan on 04.11.2023.
 //
-
 
 struct Answer {
     let text: String
     let type: AnimalType
 }
 
-enum AnimalType: Character {
+enum  AnimalType: Character {
     case dog = "🐶"
     case cat = "🐱"
     case rabbit = "🐰"
@@ -20,13 +19,13 @@ enum AnimalType: Character {
     var definition: String {
         switch self {
         case .dog:
-            return "Собака"
+            return "Вам нравится быть с друзьями. Вы окружаете себя людьми, которые вам нравятся и всегда готовы помочь."
         case .cat:
-            return "Кошка"
+            return "Вы себе на уме. Любите гулять сами по себе. Вы цените одиночество."
         case .rabbit:
-            return "Кролик"
+            return "Вам нравится все мягкое. Вы здоровы и полны энергии."
         case .turtle:
-            return "Черепаха"
+            return "Ваша сила - в мудрости. Медленный и вдумчивый выигрывает на больших дистанциях."
         }
     }
 }

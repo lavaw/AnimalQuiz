@@ -2,52 +2,47 @@
 //  QuestionViewController.swift
 //  AnimalQuiz
 //
-//  Created by Rudolf Amiryan on 04.11.23.
+//  Created by Rudolf Amiryan on 05.11.2023.
 //
 
 import UIKit
 
-class QuestionViewController: UIViewController {
-
-    @IBOutlet weak var singleButtonAnswer: UIButton!
-    @IBOutlet weak var rangedSlider: UISlider! {
+class QuestionsViewController: UIViewController {
+    
+    @IBOutlet var progressView: UIProgressView!
+    @IBOutlet var questionLabel: UILabel!
+    @IBOutlet var rangedSlider: UISlider! {
         didSet {
             let answerCount = Float(currentAnswers.count - 1)
             rangedSlider.value = answerCount
         }
     }
-    @IBOutlet weak var progressView: UIProgressView!
-    @IBOutlet weak var questionLabel: UILabel!
     
-    @IBOutlet weak var singleStackView: UIStackView!
-    @IBOutlet weak var multiplyStackView: UIStackView!
-    
-    @IBOutlet weak var rangedStackView: UIStackView!
+    @IBOutlet var singleStackView: UIStackView!
+    @IBOutlet var multipleStackView: UIStackView!
+    @IBOutlet var rangedStackView: UIStackView!
     
     @IBOutlet var singleButtons: [UIButton]!
-    
-    @IBOutlet var multiplyLabels: [UILabel]!
-    
+    @IBOutlet var multipleLabels: [UILabel]!
     @IBOutlet var rangedLabels: [UILabel]!
- 
-    @IBOutlet var multiplySwitches: [UISwitch]!
-    //MARK: - Properties
+    @IBOutlet var multipleSwitches: [UISwitch]!
     
+    
+    // MARK: Properties
     private let questions = Question.getQuestions()
     private var questionIndex = 0
     private var answerChosen: [Answer] = []
     private var currentAnswers: [Answer] {
-        questions[questionIndex].answer
-        
+        questions[questionIndex].answers
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         updateUI()
     }
-
+    
     @IBAction func singleButtonAnswerPressed(_ sender: UIButton) {
-        guard let currentIndex = singleButtons.firstIndex(of: sender) else {return}
+        guard let currentIndex = singleButtons.firstIndex(of: sender) else { return }
         
         let currentAnswer = currentAnswers[currentIndex]
         answerChosen.append(currentAnswer)
@@ -55,31 +50,33 @@ class QuestionViewController: UIViewController {
         nextQuestion()
     }
     
-    @IBAction func multiplyAnswerPressed() {
-        for (multiplySwitch, answer) in zip(multiplySwitches, currentAnswers) {
-            if multiplySwitch.isOn {
+    @IBAction func multipleAnswerPressed() {
+        for (multipleSwitch, answer) in zip(multipleSwitches, currentAnswers) {
+            if multipleSwitch.isOn {
                 answerChosen.append(answer)
             }
         }
+        
         nextQuestion()
     }
     
-    @IBAction func rangedAnswerPressed() {
+    @IBAction func rangedAnsweButtonPressed() {
         let index = Int(rangedSlider.value)
         answerChosen.append(currentAnswers[index])
         
         nextQuestion()
     }
+    
 }
 
-//MARK: - Private
-
-extension QuestionViewController {
+// MARK: - Private
+extension QuestionsViewController {
     private func updateUI() {
         // Hide stacks
-        for stackView in [singleStackView, multiplyStackView, rangedStackView, singleButtonAnswer] {
+        for stackView in [singleStackView, multipleStackView, rangedStackView] {
             stackView?.isHidden = true
         }
+        
         // get current question
         let currentQuestion = questions[questionIndex]
         
@@ -89,8 +86,7 @@ extension QuestionViewController {
         // calculate progress
         let totalProgress = Float(questionIndex) / Float(questions.count)
         
-        // set progress for progressview
-        
+        // set progress for progressView
         progressView.setProgress(totalProgress, animated: true)
         
         title = "Вопрос № \(questionIndex + 1) из \(questions.count)"
@@ -98,16 +94,18 @@ extension QuestionViewController {
         // show current StackView
         showCurrentStackView(for: currentQuestion.type)
     }
+    
     private func showCurrentStackView(for type: ResponseType) {
         switch type {
         case .single:
             showSingleStackView(with: currentAnswers)
         case .multiple:
-            showMultiplyStackView(with: currentAnswers)
+            showMultipleStackView(with: currentAnswers)
         case .range:
-            showRangeStackView(with: currentAnswers)
+            showRangedStackView(with: currentAnswers)
         }
     }
+    
     private func showSingleStackView(with answers: [Answer]) {
         singleStackView.isHidden = false
         
@@ -116,21 +114,21 @@ extension QuestionViewController {
         }
     }
     
-    private func showMultiplyStackView(with answers: [Answer]) {
-        multiplyStackView.isHidden = false
-        singleButtonAnswer.isHidden = false
+    private func showMultipleStackView(with answers: [Answer]) {
+        multipleStackView.isHidden = false
         
-        for (label, answer) in zip(multiplyLabels, answers) {
+        for (label, answer) in zip(multipleLabels, answers) {
             label.text = answer.text
         }
     }
     
-    private func showRangeStackView(with answers: [Answer]) {
+    private func showRangedStackView(with answers: [Answer]) {
         rangedStackView.isHidden = false
         
         rangedLabels.first?.text = answers.first?.text
         rangedLabels.last?.text = answers.last?.text
     }
+    
     private func nextQuestion() {
         questionIndex += 1
         
@@ -138,6 +136,7 @@ extension QuestionViewController {
             updateUI()
             return
         }
+        
         performSegue(withIdentifier: "showResult", sender: nil)
     }
 }
